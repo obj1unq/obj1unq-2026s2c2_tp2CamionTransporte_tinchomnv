@@ -1,0 +1,12 @@
+import obj1unq-2026s2c2_tp1SueldoPepe_tinchomnv.pepe.*
+import camion.* 
+import cosas.*
+
+describe "Peso par" {
+  test "Mostrar pesos pares" {
+        camion.cargar(bumblebee)
+        arenaAGranel.asignarPeso(50)
+        camion.cargar(arenaAGranel)
+        
+  }
+}
