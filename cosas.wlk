@@ -1,6 +1,8 @@
 object knightRider {
 	method peso() { return 500 }
 	method nivelPeligrosidad() { return 10 }
+	method bultos() = 1
+	method sufrirAccidente() {}
 }
 
 object arenaAGranel {
@@ -11,21 +13,28 @@ object arenaAGranel {
 	}
 
 	method nivelPeligrosidad() { return 1 }
+	method bultos() = 1
+
+	method sufrirAccidente() {
+		peso += 20
+	}
 }
 
 object bumblebee {
-	var estadoTransformacion = auto 
+	var property estaEnModoAuto = true
 	method peso() { return 800 }
+	method bultos() = 2
 	method nivelPeligrosidad() { 
-		return if (estadoTransformacion == auto){ 15 } else { 30 }
+		return if (estaEnModoAuto){ 15 } else { 30 }
 	}
 
-	method transformarA(_transformacion) {
-		estadoTransformacion = _transformacion
+	method sufrirAccidente() {
+		estaEnModoAuto = !estaEnModoAuto
 	}
 }
 object auto {}
 object robot {}
+object cosaVacia {}
 
 
 object paqueteLadrillos {
@@ -39,6 +48,20 @@ object paqueteLadrillos {
 
 	method asignarPeso(peso) {
 		cantidad = peso
+	}
+
+	method bultos() {
+		if (cantidad <= 100) {
+			return 1
+		} else if (cantidad <= 300) {
+			return 2
+		} else {
+			return 3
+		}
+  	}
+
+	method sufrirAccidente() {
+		cantidad = 0.max(cantidad - 12)
 	}
 }
 
@@ -56,6 +79,18 @@ object bateriaAntiaera {
 	method cargarMisiles() {
 		tieneMisiles = true
 	}
+
+	method bultos() {
+		if (tieneMisiles) {
+			return 2
+		} else {
+			return 1
+		}
+	}
+
+	method sufrirAccidente() {
+		tieneMisiles = false
+	}
 }
 
 
@@ -67,6 +102,11 @@ object residuosRadioactivos {
 	}
 
 	method peligrosidad() { return 200 }
+	method bultos() = 1
+
+	method sufrirAccidente() {
+		peso += 15
+	}
 }
 
 object contenedorPortuario {
@@ -89,13 +129,36 @@ object contenedorPortuario {
 		objetos.remove(unaCosa)
 	}
 
-	method peligrosidad() {
+	method nivelPeligrosidad() {
 		return if (!objetos.isEmpty()) {
-			objetos.filter({cosa => cosa == self.objetoMasPeligroso()}).nivelPeligrosidad()
+			objetos.max({cosa => cosa.nivelPeligrosidad()}).nivelPeligrosidad()
 		} else { 0 } 
 	}
 
-	method objetoMasPeligroso() {
-		return objetos.max({cosa => cosa.nivelPeligrosidad()})
+	method bultos() {
+		return 1 + objetos.sum({ cosa => cosa.bultos() })
+	}
+
+	method sufrirAccidente() {
+		objetos.forEach({ cosa => cosa.sufrirAccidente() })
+	}
+}
+
+object embalajeDeSeguridad {
+	var property cosaEnvuelta = cosaVacia
+
+	method bultos() = 2
+	method sufrirAccidente() {}
+	
+	method envolver(cosa) {
+		cosaEnvuelta = cosa
+	}
+
+	method peso(){
+		return cosaEnvuelta.peso()
+	}
+
+	method nivelPeligrosidad(){
+		return cosaEnvuelta.nivelPeligrosidad() / 2
 	}
 }

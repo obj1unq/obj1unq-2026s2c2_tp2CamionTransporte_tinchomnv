@@ -48,5 +48,25 @@ object camion {
 	method puedeCircularEnRuta(nivel) {
 		not self.estaExedidoDePeso() && self.cosasMasPeligrosasQue(nivel).isEmpty()
 	}
+
+	method algoEnRangoDePeso(min, max) {
+		return cosas.filter({cosa => cosa.peso() > min && cosa.peso() < max})	
+	}
+
+	method elementoMasPesado() {
+		return cosas.max({cosa => cosa.peso()})
+	}
+
+	method pesosDeElementos() {
+		return cosas.map({cosa => cosa.peso()})
+	}
+
+	method cantidadDeBultos() {
+		return cosas.sum({cosa => cosa.bultos()})
+	}
+
+	method sufrirAccidente() {
+  		cosas.forEach({ cosa => cosa.sufrirAccidente() })
+	}
 }
 
