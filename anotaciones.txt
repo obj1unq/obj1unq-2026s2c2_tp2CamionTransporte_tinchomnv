@@ -1,0 +1,1 @@
+En "object paqueteLadrillos", al momento de hacer la carga del camion hay que asignarle la cantidad de ladrillos
